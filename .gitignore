@@ -1,2 +1,7 @@
 .vscode/
 *.out
+*.sln
+*.vcxproj
+*.vcxproj.*
+Debug/
+.vs/

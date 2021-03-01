@@ -24,7 +24,7 @@ int Board::dimension()
 }
 
 // number of tiles out of place
-int Board::hamming() 
+int Board::hamming() const 
 {
     int res = 0;
     int n = m_board.size();
@@ -44,7 +44,7 @@ int Board::hamming()
 }
 
 // sum of Manhattan distances between tiles and goal i.e. taxi-cab metric
-int Board::manhattan() 
+int Board::manhattan() const
 {
     int n = m_board.size();
     int res = 0;
@@ -65,7 +65,7 @@ int Board::manhattan()
     return res;
 }
 
-bool Board::isGoal() 
+bool Board::isGoal() const 
 {
     return hamming() == 0;
 }
@@ -75,7 +75,7 @@ bool operator==(Board const& board1, Board const& board2)
     return board1.m_board == board2.m_board;
 }
 
-std::vector<Board> Board::neighbours() 
+std::vector<Board> Board::neighbours() const
 {
     std::pair<int, int> space = findSpace();
     int row = space.first;
@@ -110,12 +110,12 @@ std::vector<Board> Board::neighbours()
     return neighbours;
 }
 
-std::pair<int, int> Board::findSpace()
+std::pair<int, int> Board::findSpace() const
 {
     int n = m_board.size();
     for (int i = 0; i < n; ++i)
     {
-        for (int j = 0; i < n; ++j)
+        for (int j = 0; j < n; ++j)
         {
             if (m_board[i][j] == 0)
             {
@@ -125,7 +125,7 @@ std::pair<int, int> Board::findSpace()
     }
 }
 
-void Board::swap(std::vector<std::vector<int>> &board, int row1, int col1, int row2, int col2)
+void Board::swap(std::vector<std::vector<int>> &board, int row1, int col1, int row2, int col2) const
 {
     int temp = board[row1][col1];
     board[row1][col1] = board[row2][col2];

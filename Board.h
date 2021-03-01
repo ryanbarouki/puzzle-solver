@@ -9,13 +9,13 @@ public:
     Board(std::vector<std::vector<int>> const& tiles);
     void draw();
     int dimension();
-    int hamming();
-    int manhattan();
-    bool isGoal();
+    int hamming() const;
+    int manhattan() const;
+    bool isGoal() const;
     friend bool operator==(Board const& board1, Board const& board2);
-    std::vector<Board> neighbours();
+    std::vector<Board> neighbours() const;
     // Board twin(); // used for optimisation
 private:
-    std::pair<int, int> findSpace();
-    void swap(std::vector<std::vector<int>> &board, int row1, int col1, int row2, int col2);
+    std::pair<int, int> findSpace() const;
+    void swap(std::vector<std::vector<int>> &board, int row1, int col1, int row2, int col2) const;
 };
