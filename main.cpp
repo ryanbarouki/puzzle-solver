@@ -4,8 +4,11 @@
 
 int main() 
 {
-    //Board board({ {14, 13, 5, 3},{0, 1, 8, 12},{6, 2, 4, 10},{11, 9, 15, 7} });
-    Board board({ {6,9,7,4},{2,5,10,8},{3,11,1,12},{13, 14, 15, 0} });
+    // Board board({ {14, 13, 5, 3},{0, 1, 8, 12},{6, 2, 4, 10},{11, 9, 15, 7} });
+    // Board board({ {0,15,14,13},{12,11,10,9},{8,7,6,5},{4,3,2,1} }); // 78 moves!! too long
+    // Board board({ {6,9,7,4},{2,5,10,8},{3,11,1,12},{13, 14, 15, 0} });
+    // Board board({ {2,3,0,8},{15,12,6,7},{13,1,4,9},{14,11,10,5} }); // 50 moves
+    Board board({ {5,6,3,4},{8,0,1,15},{10,7,2,11},{12,9,14,13} }); // 40 moves
     //Board board({ {3,1,2}, {0,4,5}, {7,8,6} });
     //Board board({ {0,4,1}, {5,3,2}, {7,8,6} }); // 10 moves - solved
     //Board board({ {3,4,6}, {2,0,8}, {1,7,5} }); // 14 moves - solved
@@ -16,25 +19,13 @@ int main()
     //Board board({ {6,3,8}, {5,4,1}, {7,2,0} }); // 28 moves - solved
     //Board board({ {8,6,7}, {2,0,4}, {3,5,1} }); // 30 moves - solved quickly with manhattan
     //Board board({ {0,1,3}, {4,2,5}, {7,8,6} });
-    std::cout << "Hamming distance is: " << board.hamming() << std::endl;
-    std::cout << "Manhattan distance is: " << board.manhattan() << std::endl;
-   /* std::vector<Board> neighbours = board.neighbours();
-    board.draw();
-	std::cout << std::endl;
-    for (auto brd : neighbours)
-    {
-        brd.draw();
-        std::cout << std::endl;
-    }
-    */
+
 	Solver solver(board);
     
     std::stack<Board> solution = solver.solution();
 	while (!solution.empty())
 	{
 		solution.top().draw();
-		std::cout << std::endl;
-        std::cout << "Hamming dist: " << solution.top().hamming();
 		std::cout << std::endl;
         solution.pop();
 	}
