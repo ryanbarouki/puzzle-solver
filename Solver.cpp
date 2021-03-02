@@ -1,27 +1,27 @@
 #include "Solver.h"
-// TODO: critial optimisation, caching the hamming and manhattan priorities, detecting unsolvable boards
+#include <iostream>
+// TODO: memory optimisation, detecting unsolvable boards
 
 Solver::Solver(Board const& board)
 {
-	// find solution
-	Node initBoard(board, 0, nullptr);
-	m_PQ.push(initBoard);
-	//m_solution.push_back(board);
-	m_moves = 0;
+	m_PQ.push(Node(board, nullptr));
 	while (!m_PQ.top().board.isGoal())
 	{
-		std::shared_ptr<Node> prevNode = std::make_shared<Node>(m_PQ.top());
+		lastNode = std::make_shared<Node>(m_PQ.top());
 		std::vector<Board> neighbours = m_PQ.top().board.neighbours();
-		m_solution.push_back(m_PQ.top().board);
+
 		m_PQ.pop();
-		++m_moves;
 		for (auto neighbour : neighbours)
 		{
-			Node node(neighbour, m_moves, prevNode);
-			m_PQ.push(node);
+			// critical optimisation
+			if (lastNode->prevNode != nullptr && lastNode->prevNode->board == neighbour)
+			{
+				continue;
+			}
+			m_PQ.push(Node(neighbour, lastNode));
 		}
 	}
-	m_solution.push_back(m_PQ.top().board);
+	lastNode = std::make_shared<Node>(m_PQ.top());
 }
 
 bool Solver::isSolvable()
@@ -35,17 +35,37 @@ int Solver::moves()
 	return m_moves;
 }
 
-std::vector<Board> Solver::solution()
+std::stack<Board> Solver::solution()
 {
-	return m_solution;
+	std::stack<Board> result;
+	while (lastNode->prevNode)
+	{
+		result.push(lastNode->board);
+		lastNode = lastNode->prevNode;
+		m_moves++;
+	}
+	result.push(lastNode->board); // push starting board
+
+	return result;
 }
 
-Solver::Node::Node(Board const& board, int moves, std::shared_ptr<Node> prevNode) : board(board), moves(moves), prevNode(prevNode)
+Solver::Node::Node(Board const& brd, std::shared_ptr<Node> lastNode) : board(brd), prevNode(lastNode)
 {
+	if (prevNode)
+	{
+		moves = prevNode->moves + 1;
+	}
+	m_distance = board.manhattan() + moves;
 }
 
 bool operator<(Solver::Node const& a, Solver::Node const& b)
 {
 	// reversed the operator for the priority queue to be a min PQ
-	return a.board.hamming() + a.moves > b.board.hamming() + b.moves;
+	return a.getDistance() > b.getDistance();
+	//return a.board.hamming() + a.moves > b.board.hamming() + b.moves;
+}
+
+int Solver::Node::getDistance() const
+{
+	return m_distance;
 }
